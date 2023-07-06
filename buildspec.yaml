@@ -1,0 +1,23 @@
+version: 0.2
+
+
+phases:
+  pre_build:
+    commands:
+    
+      - echo Logging in to Amazon ECR...
+      - aws --version
+      - $(aws ecr get-login --no-include-email --region us-east-1)
+      - REPOSITORY_URI=009609560581.dkr.ecr.us-east-1.amazonaws.com/ssk-ecr-repo
+      
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker build -t $REPOSITORY_URI:latest .
+      
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker images..
+      - docker push $REPOSITORY_URI:latest
